@@ -1,0 +1,42 @@
+target/
+
+*.pydevproject
+.project
+.classpath
+/.settings/
+*/.settings/*
+.metadata
+bin/
+.idea
+*.iml
+
+ajcore.*.txt
+
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+# for Mac
+.DS_Store
+/pom.xml
+/build
+
+gradle/
+gradlew*
+.gradle
