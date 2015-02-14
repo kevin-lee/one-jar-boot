@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+description = "one-jar-boot"
+
+version = '0.9.7-ex1'
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+jar {
+  manifest {
+    attributes 'Implementation-Title': 'One Jar Boot',
+               'Implementation-Version': version,
+               'Main-Class': 'com.simontuffs.onejar.Boot'
+  }
+  into('doc') {
+    from {
+      ["doc/one-jar-license.txt"]
+    }
+  }
+}
