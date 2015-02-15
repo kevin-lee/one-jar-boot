@@ -1,5 +1,5 @@
 # [One-JAR™](http://one-jar.sourceforge.net)
-One-JAR is a tool to package a Java application with its dependency jars into a single jar file.
+[One-JAR™](http://one-jar.sourceforge.net) is a tool to package a Java application with its dependency jars into a single jar file.
 
 # What is One-JAR-Boot?
 `one-jar-boot` is The low-level JarClassLoader and other One-JAR bootstrap mechanisms Contains source-code for the One-JAR bootstrap classes ([The description from the One-JAR web site](http://one-jar.sourceforge.net/index.php?page=downloads&file=downloads)).

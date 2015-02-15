@@ -46,6 +46,8 @@ import java.util.jar.Attributes.Name;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.simontuffs.onejar.IoUtils.*;
+
 /**
  * Loads classes from pre-defined locations inside the jar file containing this
  * class.  Classes will be loaded from jar files contained in the following
@@ -399,11 +401,16 @@ public class JarClassLoader extends ClassLoader implements IProperties {
                 parent.mkdirs();
               }
               LOGGER.fine("using jarFile.getInputStream(" + entry + ")");
-              InputStream is = jarFile.getInputStream(entry);
-              FileOutputStream os = new FileOutputStream(dest);
-              copy(is, os);
-              is.close();
-              os.close();
+              InputStream is = null;
+              FileOutputStream os = null;
+              try {
+                is = jarFile.getInputStream(entry);
+                os = new FileOutputStream(dest);
+                copy(is, os);
+              } finally {
+                closeQuietly(os);
+                closeQuietly(is);
+              }
             } else {
               String msg = "Up-to-date: " + $entry;
               if (showexpand) {
@@ -841,32 +848,36 @@ public class JarClassLoader extends ClassLoader implements IProperties {
 
     if (result == null) {
       // Delegate to parent classloader first.
-      ClassLoader parent = getParent();
+      final ClassLoader parent = getParent();
       if (parent != null) {
         result = parent.getResourceAsStream(resource);
       }
     }
 
-    if (result == null) {
-      // Make resource canonical (remove ., .., etc).
-      resource = canon(resource);
-
-      // Look up resolving first.  This allows jar-local
-      // resolution to take place.
-      ByteCode bytecode = (ByteCode) byteCode.get(resolve(resource));
-      if (bytecode == null) {
-        // Try again with an unresolved name.
-        bytecode = (ByteCode) byteCode.get(resource);
-      }
-      if (bytecode != null) result = new ByteArrayInputStream(bytecode.bytes);
+    if (result != null) {
+      // If result is not null, just return it so that it doesn't need to do unnecessary nullity check three times.
+      LOGGER.fine("getByteStream(" + resource + ") -> " + result);
+      return result;
     }
+
+    // Make resource canonical (remove ., .., etc).
+    resource = canon(resource);
+
+    // Look up resolving first.  This allows jar-local
+    // resolution to take place.
+    ByteCode bytecode = (ByteCode) byteCode.get(resolve(resource));
+    if (bytecode == null) {
+      // Try again with an unresolved name.
+      bytecode = (ByteCode) byteCode.get(resource);
+    }
+    if (bytecode != null) result = new ByteArrayInputStream(bytecode.bytes);
 
     // Contributed by SourceForge "ffrog_8" (with thanks, Pierce. T. Wetter III).
     // Handles JPA loading from jars.
     if (result == null) {
       if (jarNames.contains(resource)) {
         // resource wanted is an actual jar
-        LOGGER.info("loading resource file directly" + resource);
+        LOGGER.info("loading resource file directly: " + resource);
         result = super.getResourceAsStream(resource);
       }
     }
@@ -877,7 +888,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
     // delegateToParent = true;
     if (result == null && delegateToParent) {
       // http://code.google.com/p/onejar-maven-plugin/issues/detail?id=16
-      ClassLoader parentClassLoader = getParent();
+      final ClassLoader parentClassLoader = getParent();
 
       // JarClassLoader cannot satisfy requests for actual jar files themselves so it must delegate to it's
       // parent. However, the "parent" is not always a JarClassLoader.
@@ -894,7 +905,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
   /**
    * Resolve a resource name.  Look first in jar-relative, then in global scope.
    *
-   * @param resource
+   * @param $resource
    * @return
    */
   protected String resolve(String $resource) {
@@ -1132,15 +1143,15 @@ public class JarClassLoader extends ClassLoader implements IProperties {
   // and findResources();
   protected URL findResource(String $resource) {
     try {
-      LOGGER.fine("findResource(\"" + $resource + "\")");
+      LOGGER.fine("findResource(" + $resource + ")");
       URL url = externalClassLoader != null ? externalClassLoader.getResource($resource) : null;
       if (url != null) {
-        LOGGER.info("findResource() found in external: \"" + $resource + "\"");
+        LOGGER.info("findResource(" + $resource + ") found in external.");
         //LOGGER.fine("findResource(): " + $resource + "=" + url);
         return url;
       }
       // Delegate to parent.
-      ClassLoader parent = getParent();
+      final ClassLoader parent = getParent();
       if (parent != null) {
         url = parent.getResource($resource);
         if (url != null) {
@@ -1150,14 +1161,14 @@ public class JarClassLoader extends ClassLoader implements IProperties {
       // Do we have the named resource in our cache?  If so, construct a
       // 'onejar:' URL so that a later attempt to access the resource
       // will be redirected to our Handler class, and thence to this class.
-      String resource = resolve($resource);
+      final String resource = resolve($resource);
       if (resource != null) {
         // We know how to handle it.
-        ByteCode entry = ((ByteCode) byteCode.get(resource));
-        LOGGER.info("findResource() found: \"" + $resource + "\" for caller " + getCaller() + " in codebase " + entry.codebase);
-        return urlFactory.getURL(entry.codebase, $resource);
+        final ByteCode entry = ((ByteCode) byteCode.get(resource));
+        LOGGER.info("findResource(" + $resource + ") found: " + resource + " for caller " + getCaller() + " in codebase " + entry.codebase);
+        return urlFactory.getURL(entry.codebase, resource);
       }
-      LOGGER.info("findResource(): unable to locate \"" + $resource + "\"");
+      LOGGER.info("findResource(): unable to locate " + $resource);
       // If all else fails, return null.
       return null;
     } catch (MalformedURLException mux) {
@@ -1193,22 +1204,6 @@ public class JarClassLoader extends ClassLoader implements IProperties {
     };
   }
 
-  /**
-   * Utility to assist with copying InputStream to OutputStream.  All
-   * bytes are copied, but both streams are left open.
-   *
-   * @param in  Source of bytes to copy.
-   * @param out Destination of bytes to copy.
-   * @throws IOException
-   */
-  protected void copy(InputStream in, OutputStream out) throws IOException {
-    byte[] buf = new byte[1024];
-    while (true) {
-      int len = in.read(buf);
-      if (len < 0) break;
-      out.write(buf, 0, len);
-    }
-  }
 
   public String toString() {
     return super.toString() + (name != null ? "(" + name + ")" : "");
@@ -1317,6 +1312,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
 
       // See if it's a resource in the JAR that can be extracted
       File tempNativeLib = null;
+      InputStream is = null;
       FileOutputStream os = null;
       try {
         int lastdot = resourcePath.lastIndexOf('.');
@@ -1324,14 +1320,13 @@ public class JarClassLoader extends ClassLoader implements IProperties {
         if (lastdot >= 0) {
           suffix = resourcePath.substring(lastdot);
         }
-        InputStream is = this.getClass().getResourceAsStream("/" + resourcePath);
+        is = this.getClass().getResourceAsStream("/" + resourcePath);
 
         if (is != null) {
           tempNativeLib = File.createTempFile(name + "-", suffix);
           tempNativeLib.deleteOnExit();
           os = new FileOutputStream(tempNativeLib);
           copy(is, os);
-          os.close();
           LOGGER.fine("Stored native library " + name + " at " + tempNativeLib);
           result = tempNativeLib.getPath();
           binLibPath.put(resourcePath, result);
@@ -1346,16 +1341,8 @@ public class JarClassLoader extends ClassLoader implements IProperties {
         // Return null by default to search the java.library.path
         LOGGER.warning("Unable to load native library: " + e);
       } finally {
-        if (os != null) {
-          try {
-            os.close();
-          } catch (IOException e) {
-            final StringWriter out = new StringWriter();
-            PrintWriter writer = new PrintWriter(out);
-            e.printStackTrace(writer);
-            LOGGER.warning(out.toString());
-          }
-        }
+        closeQuietly(is);
+        closeQuietly(os);
       }
 
     }
@@ -1367,9 +1354,13 @@ public class JarClassLoader extends ClassLoader implements IProperties {
     String answer = "";
     while (answer == null || (!answer.startsWith("n") && !answer.startsWith("y") && !answer.startsWith("q"))) {
       promptForConfirm(location);
-      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-      answer = br.readLine();
-      br.close();
+      BufferedReader br = null;
+      try {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        answer = br.readLine();
+      } finally {
+        closeQuietly(br);
+      }
     }
     return answer;
   }
