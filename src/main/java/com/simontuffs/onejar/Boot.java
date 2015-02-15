@@ -182,7 +182,7 @@ public class Boot {
     if (Boolean.valueOf(System.getProperty(P_SHOW_PROPERTIES, "false")).booleanValue()) {
       // What are the system properties.
       Properties props = System.getProperties();
-      String keys[] = props.keySet().toArray(new String[]{});
+      String keys[] = props.keySet().toArray(new String[0]);
       Arrays.sort(keys);
 
       for (int i = 0; i < keys.length; i++) {
@@ -251,7 +251,7 @@ public class Boot {
       } else {
         // There is no main jar. Info unless mainJar is empty string.
         // The load(mainClass) will scan for main jars anyway.
-        if (!"".equals(mainJar)) {
+        if (mainJar != null && !mainJar.isEmpty()) {
           LOGGER.info("Unable to locate main jar '" + mainJar + "' in the JAR file " + getMyJarPath());
         }
       }

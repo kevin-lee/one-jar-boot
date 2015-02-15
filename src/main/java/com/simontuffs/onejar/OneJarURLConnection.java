@@ -25,12 +25,13 @@ public class OneJarURLConnection extends JarURLConnection {
 
   private JarFile jarFile;
 
-  private static URL removeDoubleSlashesAfterBang(URL url) throws MalformedURLException {
+  private static URL fromBangDoubleSlashToBangSlash(URL url) throws MalformedURLException {
     return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile().replaceAll("!//", "!/"));
   }
 
   public OneJarURLConnection(URL url) throws MalformedURLException {
-    super(removeDoubleSlashesAfterBang(url));
+//    super(fromBangDoubleSlashToBangSlash(url));
+    super(url);
   }
 
   public JarFile getJarFile() throws IOException {
