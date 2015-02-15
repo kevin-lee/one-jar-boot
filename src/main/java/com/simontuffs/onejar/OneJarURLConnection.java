@@ -20,35 +20,39 @@ import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.jar.JarFile;
+
 public class OneJarURLConnection extends JarURLConnection {
 
-	private JarFile jarFile;
+  private JarFile jarFile;
 
-	public OneJarURLConnection(URL url) throws MalformedURLException {
-		super(url);
-	}
+  private static URL removeDoubleSlashesAfterBang(URL url) throws MalformedURLException {
+    return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile().replaceAll("!//", "!/"));
+  }
 
-	public JarFile getJarFile() throws IOException {
-		return jarFile;
-	}
+  public OneJarURLConnection(URL url) throws MalformedURLException {
+    super(removeDoubleSlashesAfterBang(url));
+  }
 
-	public void connect() throws IOException {
-		String jarWithContent = getEntryName();
-		int separator = jarWithContent.indexOf("!/");
-		// Handle the case where a URL points to the top-level jar file, i.e. no '!/' separator.
-		if (separator >= 0) {
-	        String jarFilename = jarWithContent, filename = null;
-		    jarFilename = jarWithContent.substring(0, separator++);
-		    filename = jarWithContent.substring(++separator);
-            jarFile = new OneJarFile(Boot.getMyJarPath(), jarFilename, filename);
-		} else {
-		    // Entry in the top-level One-JAR.
-	        jarFile = new JarFile(Boot.getMyJarPath());
-		}
-	}
+  public JarFile getJarFile() throws IOException {
+    return jarFile;
+  }
 
-	public InputStream getInputStream() throws IOException {
-		return jarFile.getInputStream(jarFile.getJarEntry(getEntryName()));
-	}
+  public void connect() throws IOException {
+    String jarWithContent = getEntryName();
+    int separator = jarWithContent.indexOf("!/");
+    // Handle the case where a URL points to the top-level jar file, i.e. no '!/' separator.
+    if (separator >= 0) {
+      final String jarFilename = jarWithContent.substring(0, separator++);
+      final String filename = jarWithContent.substring(++separator);
+      jarFile = new OneJarFile(Boot.getMyJarPath(), jarFilename, filename);
+    } else {
+      // Entry in the top-level One-JAR.
+      jarFile = new JarFile(Boot.getMyJarPath());
+    }
+  }
+
+  public InputStream getInputStream() throws IOException {
+    return jarFile.getInputStream(jarFile.getJarEntry(getEntryName()));
+  }
 
 }

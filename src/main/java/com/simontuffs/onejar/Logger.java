@@ -8,6 +8,9 @@
  */
 package com.simontuffs.onejar;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Simple logger.
  */
@@ -47,6 +50,13 @@ public final class Logger {
     this.prefix = "[" + name + "] ";
   }
 
+  private String getStackTrace(Exception e) {
+    final StringWriter out = new StringWriter();
+    PrintWriter writer = new PrintWriter(out);
+    e.printStackTrace(writer);
+    return out.toString();
+  }
+
   /**
    * Log a SEVERE message.
    * 
@@ -56,6 +66,15 @@ public final class Logger {
     if (loglevel >= LOGLEVEL_SEVERE) {
       System.err.println(this.prefix + "ERROR: " + message);
     }
+  }
+
+  /**
+   * Log a SEVERE message.
+   *
+   * @param e the Exception to be logged
+   */
+  public void severe(Exception e) {
+    severe(getStackTrace(e));
   }
 
   /**
@@ -70,6 +89,15 @@ public final class Logger {
   }
 
   /**
+   * Log a WARNING message.
+   *
+   * @param e the Exception to be logged
+   */
+  public void warning(Exception e) {
+    warning(getStackTrace(e));
+  }
+
+  /**
    * Log a INFO message.
    * 
    * @param message the message to be logged
@@ -78,6 +106,15 @@ public final class Logger {
     if (loglevel >= LOGLEVEL_INFO) {
       System.out.println(this.prefix + "INFO:  " + message);
     }
+  }
+
+  /**
+   * Log a INFO message.
+   *
+   * @param e the Exception to be logged
+   */
+  public void info(Exception e) {
+    info(getStackTrace(e));
   }
 
   /**
@@ -90,7 +127,16 @@ public final class Logger {
       System.out.println(this.prefix + "FINE:  " + message);
     }
   }
-  
+
+  /**
+   * Log a FINE message.
+   *
+   * @param e the Exception to be logged
+   */
+  public void fine(Exception e) {
+    fine(getStackTrace(e));
+  }
+
   /**
    * Sets the logging level.
    * 
