@@ -1,0 +1,5 @@
+language: java
+before_install: chmod +x gradlew
+jdk:
+  - openjdk6
+script: ./gradlew clean build
