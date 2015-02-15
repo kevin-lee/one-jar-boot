@@ -21,6 +21,7 @@ uploadArchives {
       snapshotRepository(url: 'http://nexus.lckymn.com/content/repositories/kevin-public-snapshots') {
         authentication(userName: mavenDeployUser, password: mavenDeployPassword)
       }
+      pom.artifactId = 'one-jar-boot'
     }
   }
 }
