@@ -30,8 +30,8 @@ public class OneJarURLConnection extends JarURLConnection {
   }
 
   public OneJarURLConnection(URL url) throws MalformedURLException {
-//    super(fromBangDoubleSlashToBangSlash(url));
-    super(url);
+    super(fromBangDoubleSlashToBangSlash(url));
+//    super(url);
   }
 
   public JarFile getJarFile() throws IOException {

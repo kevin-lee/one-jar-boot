@@ -1166,7 +1166,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
         // We know how to handle it.
         final ByteCode entry = ((ByteCode) byteCode.get(resource));
         LOGGER.info("findResource(" + $resource + ") found: " + resource + " for caller " + getCaller() + " in codebase " + entry.codebase);
-        return urlFactory.getURL(entry.codebase, resource);
+        return urlFactory.getURL(entry.codebase, $resource);
       }
       LOGGER.info("findResource(): unable to locate " + $resource);
       // If all else fails, return null.
