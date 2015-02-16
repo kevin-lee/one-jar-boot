@@ -4,7 +4,7 @@ apply plugin: 'maven'
 
 description = "one-jar-boot"
 
-version = '0.9.7-ex1'
+version = '0.97-ex1'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
