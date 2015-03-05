@@ -870,7 +870,9 @@ public class JarClassLoader extends ClassLoader implements IProperties {
       // Try again with an unresolved name.
       bytecode = (ByteCode) byteCode.get(resource);
     }
-    if (bytecode != null) result = new ByteArrayInputStream(bytecode.bytes);
+    if (bytecode != null) {
+      result = new ByteArrayInputStream(bytecode.bytes);
+    }
 
     // Contributed by SourceForge "ffrog_8" (with thanks, Pierce. T. Wetter III).
     // Handles JPA loading from jars.
@@ -997,8 +999,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
    *                   is called 'recording' under the launch directory (recommended).
    */
   public void setRecording(String $recording) {
-    recording = $recording;
-    if (recording == null) recording = RECORDING;
+    recording = $recording != null ? $recording : RECORDING;
   }
 
   public String getRecording() {
@@ -1166,7 +1167,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
         // We know how to handle it.
         final ByteCode entry = ((ByteCode) byteCode.get(resource));
         LOGGER.info("findResource(" + $resource + ") found: " + resource + " for caller " + getCaller() + " in codebase " + entry.codebase);
-        return urlFactory.getURL(entry.codebase, $resource);
+        return urlFactory.getURL(entry.codebase, resource);
       }
       LOGGER.info("findResource(): unable to locate " + $resource);
       // If all else fails, return null.
@@ -1251,7 +1252,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
     final String BINLIB_WINDOWS32_PREFIX = BINLIB_PREFIX + "windows32/";
     final String BINLIB_WINDOWS64_PREFIX = BINLIB_PREFIX + "windows64/";
 
-    String binlib = null;
+    final String binlib;
 
     // Mac
     if (os.startsWith("mac os x")) {
@@ -1311,7 +1312,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
     } else {
 
       // See if it's a resource in the JAR that can be extracted
-      File tempNativeLib = null;
+      final File tempNativeLib;
       InputStream is = null;
       FileOutputStream os = null;
       try {

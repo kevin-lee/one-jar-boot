@@ -23,10 +23,16 @@ import java.util.jar.JarFile;
 
 public class OneJarURLConnection extends JarURLConnection {
 
+  private static final String EXCLAMATION_DOUBLE_SLASH = "!//";
+  public static final String EXCLAMATION_SLASH = "!/";
+
   private JarFile jarFile;
 
   private static URL fromBangDoubleSlashToBangSlash(URL url) throws MalformedURLException {
-    return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile().replaceAll("!//", "!/"));
+    if (url.getFile().contains(EXCLAMATION_DOUBLE_SLASH)) {
+      return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile().replaceAll(EXCLAMATION_DOUBLE_SLASH, EXCLAMATION_SLASH));
+    }
+    return url;
   }
 
   public OneJarURLConnection(URL url) throws MalformedURLException {
@@ -34,13 +40,15 @@ public class OneJarURLConnection extends JarURLConnection {
 //    super(url);
   }
 
+  @Override
   public JarFile getJarFile() throws IOException {
     return jarFile;
   }
 
+  @Override
   public void connect() throws IOException {
     String jarWithContent = getEntryName();
-    int separator = jarWithContent.indexOf("!/");
+    int separator = jarWithContent.indexOf(EXCLAMATION_SLASH);
     // Handle the case where a URL points to the top-level jar file, i.e. no '!/' separator.
     if (separator >= 0) {
       final String jarFilename = jarWithContent.substring(0, separator++);
@@ -52,6 +60,7 @@ public class OneJarURLConnection extends JarURLConnection {
     }
   }
 
+  @Override
   public InputStream getInputStream() throws IOException {
     return jarFile.getInputStream(jarFile.getJarEntry(getEntryName()));
   }
