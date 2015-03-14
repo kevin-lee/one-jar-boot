@@ -103,7 +103,7 @@ repositories {
 * Add Dependency
 
 ```gradle
-compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.9.7-ex1'
+compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.97-ex1'
 ```
   OR
 
