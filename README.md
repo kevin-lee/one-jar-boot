@@ -1,4 +1,6 @@
 # [One-JAR™](http://one-jar.sourceforge.net)
+[![Build Status](https://travis-ci.org/Kevin-Lee/one-jar-boot.svg?branch=master)](https://travis-ci.org/Kevin-Lee/one-jar-boot)
+
 [One-JAR™](http://one-jar.sourceforge.net) is a tool to package a Java application with its dependency jars into a single jar file.
 
 # What is One-JAR-Boot?
