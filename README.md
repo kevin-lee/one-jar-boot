@@ -71,12 +71,13 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
   <dependency>
     <groupId>com.simontuffs</groupId>
     <artifactId>one-jar-boot</artifactId>
-    <version>0.9.7-ex1</version>
+    <version>0.97-ex1</version>
   </dependency>
 
   ...
 </dependencies>
 ```
+
 
 ## Gradle
 * Add maven repository
@@ -102,13 +103,26 @@ repositories {
 * Add Dependency
 
 ```gradle
-compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.9.7-ex1'
+compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.97-ex1'
 ```
   OR
 
 ```gradle
-compile "com.simontuffs:one-jar-boot:0.9.7-ex1"
+compile "com.simontuffs:one-jar-boot:0.97-ex1"
 ```
+
+
+## SBT
+* Add Resolver
+```scala
+resolvers += "Kevin's Public Repository" at "http://nexus.lckymn.com/content/repositories/kevin-public-releases"
+```
+
+* Add Dependency
+```scala
+libraryDependencies += "com.simontuffs" % "one-jar-boot" % "0.97-ex1"
+```
+
 
 # LICENSE
 - License file: [doc/one-jar-license.txt](doc/one-jar-license.txt)
