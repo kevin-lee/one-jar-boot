@@ -56,8 +56,12 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
   ...
 
   <repository>
-    <name>Kevin's Public Releases</name>
-    <url>http://nexus.lckymn.com/content/repositories/kevin-public-releases</url>
+    <snapshots>
+      <enabled>false</enabled>
+    </snapshots>
+    <id>bintray-kevinlee-maven</id>
+    <name>bintray</name>
+    <url>http://dl.bintray.com/kevinlee/maven</url>
   </repository>
 
   ...
@@ -73,7 +77,7 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
   <dependency>
     <groupId>com.simontuffs</groupId>
     <artifactId>one-jar-boot</artifactId>
-    <version>0.97-ex1</version>
+    <version>0.97.2</version>
   </dependency>
 
   ...
@@ -88,7 +92,7 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
 
 ```gradle
 maven {
-    url "http://nexus.lckymn.com/content/repositories/kevin-public-releases"
+  url  "http://dl.bintray.com/kevinlee/maven"
 }
 ```
   e.g.)
@@ -97,7 +101,7 @@ maven {
 repositories {
   mavenCentral()
   maven {
-    url "http://nexus.lckymn.com/content/repositories/kevin-public-releases"
+    url  "http://dl.bintray.com/kevinlee/maven"
   }
 }
 ```
@@ -105,24 +109,24 @@ repositories {
 * Add Dependency
 
 ```gradle
-compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.97-ex1'
+compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.97.2'
 ```
   OR
 
 ```gradle
-compile "com.simontuffs:one-jar-boot:0.97-ex1"
+compile "com.simontuffs:one-jar-boot:0.97.2"
 ```
 
 
 ## SBT
 * Add Resolver
 ```scala
-resolvers += "Kevin's Public Repository" at "http://nexus.lckymn.com/content/repositories/kevin-public-releases"
+resolvers += "Bintray Public Repository" at "http://dl.bintray.com/kevinlee/maven"
 ```
 
 * Add Dependency
 ```scala
-libraryDependencies += "com.simontuffs" % "one-jar-boot" % "0.97-ex1"
+libraryDependencies += "com.simontuffs" % "one-jar-boot" % "0.97.2"
 ```
 
 
