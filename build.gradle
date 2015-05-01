@@ -106,7 +106,7 @@ bintray {
     websiteUrl = 'https://github.com/Kevin-Lee/one-jar-boot'
     issueTrackerUrl = 'https://github.com/Kevin-Lee/one-jar-boot/issues'
     vcsUrl = 'https://github.com/Kevin-Lee/one-jar-boot.git'
-//    licenses = ['']
+    licenses = ['MIT']
     labels = ['Java', 'Jar']
     publicDownloadNumbers = true
 
