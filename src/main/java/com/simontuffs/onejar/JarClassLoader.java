@@ -123,15 +123,15 @@ public class JarClassLoader extends ClassLoader implements IProperties {
   protected boolean delegateToParent;
 
   protected static class ByteCode {
-    public ByteCode(String $name, String $original, ByteArrayOutputStream baos, String $codebase, Manifest $manifest) {
+    public ByteCode(String $name, String $original, byte[] baos, String $codebase, Manifest $manifest) {
       name = $name;
       original = $original;
-      bytes = baos.toByteArray();
+      bytes = baos;
       codebase = $codebase;
       manifest = $manifest;
     }
 
-    public byte bytes[];
+    public byte[] bytes;
     public String name, original, codebase;
     public Manifest manifest;
   }
@@ -408,8 +408,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
                 os = new FileOutputStream(dest);
                 copy(is, os);
               } finally {
-                closeQuietly(os);
-                closeQuietly(is);
+                closeQuietly(os, is);
               }
             } else {
               String msg = "Up-to-date: " + $entry;
@@ -560,43 +559,52 @@ public class JarClassLoader extends ClassLoader implements IProperties {
 
     // Because we are doing stream processing, we don't know what
     // the size of the entries is.  So we store them dynamically.
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    copy(is, baos);
+    ByteArrayOutputStream baos = null;
+    try {
+      baos = new ByteArrayOutputStream();
+      copy(is, baos);
 
-    if (tmp != null) {
-      // Unpack into a temporary working directory which is on the classpath.
-      File file = new File(tmp, entry.getName());
-      file.getParentFile().mkdirs();
-      FileOutputStream fos = new FileOutputStream(file);
-      fos.write(baos.toByteArray());
-      fos.close();
+      if (tmp != null) {
+        // Unpack into a temporary working directory which is on the classpath.
+        File file = new File(tmp, entry.getName());
+        file.getParentFile().mkdirs();
+        FileOutputStream fos = null;
+        try {
+          fos = new FileOutputStream(file);
+          fos.write(baos.toByteArray());
+        } finally {
+          closeQuietly(fos);
+        }
 
-    } else {
-      // If entry is a class, check to see that it hasn't been defined
-      // already.  Class names must be unique within a classloader because
-      // they are cached inside the VM until the classloader is released.
-      if (type.equals("class")) {
-        if (alreadyCached(entryName, jar, baos)) return;
-        byteCode.put(entryName, new ByteCode(entryName, entry.getName(), baos, jar, man));
-        LOGGER.fine("cached bytes for class " + entryName);
       } else {
-        // Another kind of resource.  Cache this by name, and also prefixed
-        // by the jar name.  Don't duplicate the bytes.  This allows us
-        // to map resource lookups to either jar-local, or globally defined.
-        String localname = jar + "/" + entryName;
-        byteCode.put(localname, new ByteCode(localname, entry.getName(), baos, jar, man));
-        // Keep a set of jar names so we can do multiple-resource lookup by name
-        // as in findResources().
-        jarNames.add(jar);
-        LOGGER.fine("cached bytes for local name " + localname);
-        // Only keep the first non-local entry: this is like classpath where the first
-        // to define wins.
-        if (alreadyCached(entryName, jar, baos)) return;
+        // If entry is a class, check to see that it hasn't been defined
+        // already.  Class names must be unique within a classloader because
+        // they are cached inside the VM until the classloader is released.
+        if (type.equals("class")) {
+          if (alreadyCached(entryName, jar, baos)) return;
+          byteCode.put(entryName, new ByteCode(entryName, entry.getName(), baos.toByteArray(), jar, man));
+          LOGGER.fine("cached bytes for class " + entryName);
+        } else {
+          // Another kind of resource.  Cache this by name, and also prefixed
+          // by the jar name.  Don't duplicate the bytes.  This allows us
+          // to map resource lookups to either jar-local, or globally defined.
+          String localname = jar + "/" + entryName;
+          byteCode.put(localname, new ByteCode(localname, entry.getName(), baos.toByteArray(), jar, man));
+          // Keep a set of jar names so we can do multiple-resource lookup by name
+          // as in findResources().
+          jarNames.add(jar);
+          LOGGER.fine("cached bytes for local name " + localname);
+          // Only keep the first non-local entry: this is like classpath where the first
+          // to define wins.
+          if (alreadyCached(entryName, jar, baos)) return;
 
-        byteCode.put(entryName, new ByteCode(entryName, entry.getName(), baos, jar, man));
-        LOGGER.fine("cached bytes for entry name " + entryName);
+          byteCode.put(entryName, new ByteCode(entryName, entry.getName(), baos.toByteArray(), jar, man));
+          LOGGER.fine("cached bytes for entry name " + entryName);
 
+        }
       }
+    } finally {
+      closeQuietly(baos);
     }
   }
 
@@ -1341,8 +1349,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
         // Return null by default to search the java.library.path
         LOGGER.warning("Unable to load native library: " + e);
       } finally {
-        closeQuietly(is);
-        closeQuietly(os);
+        closeQuietly(os, is);
       }
 
     }

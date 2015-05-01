@@ -19,7 +19,7 @@ public final class IoUtils {
    *
    * @param closeable Closeable to be closed.
    */
-  public static void closeQuietly(final Closeable closeable) {
+  private static void closeQuietly0(final Closeable closeable) {
     if (closeable != null) {
       try {
         closeable.close();
@@ -28,6 +28,23 @@ public final class IoUtils {
         final PrintWriter writer = new PrintWriter(out);
         e.printStackTrace(writer);
         LOGGER.warning(out.toString());
+      }
+    }
+  }
+
+  /**
+   * Closes the given closeable without throwing any exception if it is not null.
+   * If it throws any exception, logs it but doesn't re-throw it.
+   *
+   * @param closeable Closeable object to be closed.
+   * @param rest The rest of Closeable objects to be closed.
+   */
+  public static void closeQuietly(final Closeable closeable, final Closeable ... rest) {
+    closeQuietly0(closeable);
+
+    if (rest != null) {
+      for (Closeable eachCloseable : rest) {
+        closeQuietly0(eachCloseable);
       }
     }
   }
