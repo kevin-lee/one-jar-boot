@@ -17,8 +17,11 @@ description = "one-jar-boot"
 
 version = '0.97-ex1'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+def projectSourceEncoding = 'UTF-8'
+def projectJavaVersion = '1.6'
+
+sourceCompatibility = projectJavaVersion
+targetCompatibility = projectJavaVersion
 
 project.version = version
 project.group = 'com.simontuffs'
@@ -36,8 +39,6 @@ uploadArchives {
     }
   }
 }
-
-tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
 
 tasks.withType(JavaCompile) {
   options.encoding = projectSourceEncoding
