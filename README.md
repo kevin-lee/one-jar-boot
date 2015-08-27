@@ -53,7 +53,6 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
 
 ```xml
 <repositories>
-  ...
 
   <repository>
     <snapshots>
@@ -64,7 +63,6 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
     <url>http://dl.bintray.com/kevinlee/maven</url>
   </repository>
 
-  ...
 </repositories>
 ```
 
@@ -72,15 +70,13 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
 
 ```xml
 <dependencies>
-  ...
 
   <dependency>
     <groupId>com.simontuffs</groupId>
     <artifactId>one-jar-boot</artifactId>
-    <version>0.97.2</version>
+    <version>0.97.3</version>
   </dependency>
 
-  ...
 </dependencies>
 ```
 
@@ -109,12 +105,12 @@ repositories {
 * Add Dependency
 
 ```gradle
-compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.97.2'
+compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.97.3'
 ```
   OR
 
 ```gradle
-compile "com.simontuffs:one-jar-boot:0.97.2"
+compile "com.simontuffs:one-jar-boot:0.97.3"
 ```
 
 
@@ -126,7 +122,7 @@ resolvers += "Bintray Public Repository" at "http://dl.bintray.com/kevinlee/mave
 
 * Add Dependency
 ```scala
-libraryDependencies += "com.simontuffs" % "one-jar-boot" % "0.97.2"
+libraryDependencies += "com.simontuffs" % "one-jar-boot" % "0.97.3"
 ```
 
 
