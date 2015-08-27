@@ -9,14 +9,14 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
   }
 }
 apply plugin: 'com.jfrog.bintray'
 
 description = "one-jar-boot"
 
-version = '0.97.2'
+version = '0.97.3'
 
 def projectSourceEncoding = 'UTF-8'
 def projectJavaVersion = '1.6'
