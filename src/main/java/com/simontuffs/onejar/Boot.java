@@ -38,7 +38,6 @@ import java.util.zip.ZipFile;
  * Run a java application which requires multiple support jars from inside
  * a single jar file.
  *
- * <p>
  * Developer time JVM properties:
  * <pre>
  *   -Done-jar.main.class={name}  Use named class as main class to run.
@@ -48,7 +47,6 @@ import java.util.zip.ZipFile;
  *   -Done-jar.jar.names          Record loaded classes, preserve jar structure
  *   -Done-jar.verbose            Run the JarClassLoader in verbose mode.
  * </pre>
- * </p>
  *
  * @author simon@simontuffs.com (<a href="http://www.simontuffs.com">http://www.simontuffs.com</a>)
  */
