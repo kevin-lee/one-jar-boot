@@ -153,8 +153,8 @@ public class JarClassLoader extends ClassLoader implements IProperties {
 
   /**
    * The main constructor for the Jar-capable classloader.
-   * <p>
-   * Example: Given the following layout of the one-jar.jar file
+   *
+   * Example: Given the following layout of the <code>one-jar.jar</code> file
    * <pre>
    *    /
    *    /META-INF
@@ -176,8 +176,8 @@ public class JarClassLoader extends ClassLoader implements IProperties {
    *              Util.clas
    * </pre>
    * The recording directory will look like this:
-   * <ul>
-   * <li>flatten=false</li>
+   * <br>
+   * <code>flatten=false</code>
    * <pre>
    *   /recording
    *     /main.jar
@@ -189,8 +189,9 @@ public class JarClassLoader extends ClassLoader implements IProperties {
    *         /util
    *            Util.class
    * </pre>
-   * <p/>
-   * <li>flatten = true</li>
+   *
+   *
+   * <code>flatten=true</code>
    * <pre>
    *   /recording
    *     /com
@@ -198,9 +199,8 @@ public class JarClassLoader extends ClassLoader implements IProperties {
    *          Main.class
    *       /util
    *          Util.class
+   * </pre>
    *
-   * </ul>
-   * </p>
    * Flatten mode is intended for when you want to create a super-jar which can
    * be launched directly without using one-jar's launcher.  Run your application
    * under all possible scenarios to collect the actual classes which are loaded,
@@ -836,7 +836,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
    * name of the resource as present in the One-Jar jar files.
    * The other way is more direct, i.e. this.getClass().getClassLoader().getResourceAsStream().
    * Then we get the name unmangled, and can deal with it directly.
-   * <p/>
+   * <p></p>
    * The problem is this: if one resource is called /foo/bar/data, and another
    * resource is called /foo.bar.data, both will have the same mangled name,
    * namely 'foo.bar.data' and only one of them will be visible.  Perhaps the
@@ -1302,7 +1302,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
    * @param BINLIB_PREFIX the (system specific) folder to search in
    * @return the full pathname to the requested library, or null
    * @author Christopher Ottley
-   * @see Runtime#loadLibrary()
+   * @see Runtime#loadLibrary(String)
    * @since 1.2
    */
   protected String findTheLibrary(String BINLIB_PREFIX, String name) {

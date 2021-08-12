@@ -40,3 +40,14 @@ local.properties
 gradle/
 gradlew*
 .gradle
+
+.java-version
+
+.bsp/
+.bloop/
+.metals/
+.vscode/
+metals.sbt
+
+project/target/
+project/project/target/
