@@ -48,7 +48,10 @@ lazy val oneJarBoot = (project in file("."))
     ),
     publishMavenStyle := true,
     Test / publishArtifact := false,
-    licenses := List("MIT" -> url("http://opensource.org/licenses/MIT")),
+    licenses := List("One-JAR" -> url("https://raw.githubusercontent.com/Kevin-Lee/one-jar-boot/main/LICENSE")),
+    Compile / unmanagedResources += {
+      baseDirectory.value / "LICENSE"
+    },
     /* GitHub Release { */
     devOopsPackagedArtifacts := List(s"target/${name.value}*.jar"),
     /* } GitHub Release */
