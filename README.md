@@ -1,7 +1,12 @@
-# [One-JAR™](http://one-jar.sourceforge.net)
-[![Build Status](https://travis-ci.org/Kevin-Lee/one-jar-boot.svg?branch=master)](https://travis-ci.org/Kevin-Lee/one-jar-boot)
+# One-JAR
 
-[One-JAR™](http://one-jar.sourceforge.net) is a tool to package a Java application with its dependency jars into a single jar file.
+[![Build Status](https://github.com/Kevin-Lee/one-jar-boot/workflows/Build/badge.svg)](https://github.com/Kevin-Lee/one-jar-boot/actions?workflow=Build)
+[![Release Status](https://github.com/Kevin-Lee/one-jar-boot/workflows/Release/badge.svg)](https://github.com/Kevin-Lee/one-jar-boot/actions?workflow=Release) 
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.kevinlee/one-jar-boot/badge.svg)](https://search.maven.org/artifact/io.kevinlee/one-jar-boot)
+
+
+One-JAR (The original One-JAR™ project is [here](http://one-jar.sourceforge.net)) is a tool to package a Java application with its dependency jars into a single jar file.
 
 # What is One-JAR-Boot?
 `one-jar-boot` is The low-level JarClassLoader and other One-JAR bootstrap mechanisms Contains source-code for the One-JAR bootstrap classes ([The description from the One-JAR web site](http://one-jar.sourceforge.net/index.php?page=downloads&file=downloads)).
@@ -46,25 +51,11 @@ Caused by: com.fasterxml.jackson.databind.JsonMappingException: No content to ma
 ```
 This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
 
+One-JAR in this repository should solve this issue.
+
 # Get `one-jar-boot`
 
 ## Maven
-* Add maven repository
-
-```xml
-<repositories>
-
-  <repository>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-    <id>bintray-kevinlee-maven</id>
-    <name>bintray</name>
-    <url>http://dl.bintray.com/kevinlee/maven</url>
-  </repository>
-
-</repositories>
-```
 
 * Add dependency
 
@@ -72,9 +63,9 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
 <dependencies>
 
   <dependency>
-    <groupId>com.simontuffs</groupId>
+    <groupId>io.kevinlee</groupId>
     <artifactId>one-jar-boot</artifactId>
-    <version>0.97.3</version>
+    <version>0.97.4</version>
   </dependency>
 
 </dependencies>
@@ -84,45 +75,33 @@ This is [a known issue](https://github.com/aws/aws-sdk-java/issues/185).
 ## Gradle
 * Add maven repository
 
-  In `build.gradle`, add the following repository to `repositories`.
+  In `build.gradle`, make sure to have the Maven Central repository in `repositories`.
 
-```gradle
-maven {
-  url  "http://dl.bintray.com/kevinlee/maven"
-}
-```
   e.g.)
 
 ```gradle
 repositories {
   mavenCentral()
-  maven {
-    url  "http://dl.bintray.com/kevinlee/maven"
-  }
 }
 ```
 
 * Add Dependency
 
 ```gradle
-compile group: 'com.simontuffs', name: 'one-jar-boot', version: '0.97.3'
+compile group: 'io.kevinlee', name: 'one-jar-boot', version: '0.97.4'
 ```
   OR
 
 ```gradle
-compile "com.simontuffs:one-jar-boot:0.97.3"
+compile "io.kevinlee:one-jar-boot:0.97.4"
 ```
 
 
 ## SBT
-* Add Resolver
-```scala
-resolvers += "Bintray Public Repository" at "http://dl.bintray.com/kevinlee/maven"
-```
 
 * Add Dependency
 ```scala
-libraryDependencies += "com.simontuffs" % "one-jar-boot" % "0.97.3"
+libraryDependencies += "io.kevinlee" % "one-jar-boot" % "0.97.4"
 ```
 
 
